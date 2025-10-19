@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+package-lock.json
+
+# Build
+/dist
+/dist_bkp
+
+# Environment variables
+.env
+
+# Certificates
+*.pem
+
+# to-do
+to-do.md
+
+# arts temp folder
+/src/uploads
+
+# merge file
+*-merge.txt
