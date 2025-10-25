@@ -1,5 +1,6 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
 import https from 'https';
+import path from 'path';
 
 import cors from 'cors';
 import express from 'express';
@@ -9,6 +10,7 @@ import {
 } from 'express-rate-limit';
 import { type Options as SlowDownOptions, slowDown } from 'express-slow-down';
 import morgan from 'morgan';
+import swaggerUi from 'swagger-ui-express';
 
 import '@/utils/log.js';
 import { cert } from '@/config/cert.js';
@@ -94,6 +96,18 @@ app.use(
 );
 app.use(express.json());
 app.use('/api', router);
+
+app.use('/openapi', express.static(path.resolve(process.cwd(), 'docs')));
+
+app.use(
+  '/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(null, {
+    swaggerOptions: {
+      url: '/openapi/openapi.json',
+    },
+  })
+);
 
 connectToMongoDb();
 

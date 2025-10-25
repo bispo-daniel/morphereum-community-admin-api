@@ -1,0 +1,32 @@
+{
+  "delete": {
+    "tags": ["Links"],
+    "security": [{ "bearerAuth": [] }],
+    "summary": "Remover link",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters.json#/components/parameters/PathId"
+      }
+    ],
+    "responses": {
+      "200": {
+        "$ref": "../../components/responses.json#/components/responses/Empty200"
+      },
+      "400": {
+        "$ref": "../../components/responses.json#/components/responses/BadRequest"
+      },
+      "401": {
+        "$ref": "../../components/responses.json#/components/responses/Unauthorized"
+      },
+      "404": {
+        "$ref": "../../components/responses.json#/components/responses/NotFound"
+      },
+      "429": {
+        "$ref": "../../components/responses.json#/components/responses/TooManyRequests"
+      },
+      "500": {
+        "$ref": "../../components/responses.json#/components/responses/ServerError"
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "put": { "$ref": "./updateArt.json#/put" },
+  "delete": { "$ref": "./removeArt.json#/delete" }
+}

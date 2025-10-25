@@ -4,7 +4,7 @@ import { raidCache } from '@/cache/index.js';
 import { publishFlush } from '@/messaging/publish.js';
 import { RaidSchema } from '@/models/raids/index.js';
 import * as s from '@/services/raids/createRaid.js';
-import { endResponseWithCode, internalServerError } from '@/utils/http.js';
+import { badRequest, ok, internalServerError } from '@/utils/http.js';
 import logError from '@/utils/logError.js';
 
 const bodySchema = RaidSchema.omit({ _id: true });
@@ -19,7 +19,7 @@ const createRaid = async (req: Request, res: Response) => {
       error: result.error,
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   const { content, date, platform, shareMessage, url } = result.data;
@@ -30,8 +30,8 @@ const createRaid = async (req: Request, res: Response) => {
     raidCache.del('raidsData');
 
     await publishFlush('raids');
-
-    return endResponseWithCode(res, 200);
+    
+    return ok(res);
   } catch (error) {
     logError({
       type: 'internal-server-error',

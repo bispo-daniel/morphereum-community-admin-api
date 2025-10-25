@@ -3,7 +3,8 @@ import { type Request, type Response } from 'express';
 import { AuthSchema } from '@/models/auth/index.js';
 import * as s from '@/services/auth/index.js';
 import {
-  endResponseWithCode,
+  badRequest,
+  unauthorized,
   internalServerError,
   sendJson,
 } from '@/utils/http.js';
@@ -21,7 +22,7 @@ const auth = async (req: Request, res: Response) => {
       error: result.error,
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   const { email, password } = result.data;
@@ -36,7 +37,7 @@ const auth = async (req: Request, res: Response) => {
         error: 'Invalid credentials',
       });
 
-      return endResponseWithCode(res, 401);
+      return unauthorized(res);
     }
 
     return sendJson(res, { token: authenticated.token });

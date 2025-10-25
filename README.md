@@ -64,6 +64,41 @@ All routes are mounted under **`/api`**.
 
 ---
 
+## 📚 API Documentation (Swagger / OpenAPI)
+
+* **Swagger UI** is served at: `http(s)://localhost:<PORT>/docs` (auto-mounted by the server).
+* **Raw OpenAPI JSON**: `http(s)://localhost:<PORT>/openapi/openapi.json`.
+  Both routes are registered in `src/server.ts` via `swagger-ui-express` and a static mount of the `docs/` folder.
+
+### How it’s organized
+
+The spec is **modular JSON** under `docs/`:
+
+* `docs/openapi.json` – root spec that composes everything else.
+* `docs/components/` – reusable **schemas**, **responses**, **parameters**.
+
+  * Responses are “no-body” for errors and OK, matching the runtime helpers.
+  * Schemas for Auth, Links, Raids, Arts, and paginated arts response.
+  * Common params (e.g., `PathId`, `PageQuery`).
+* `docs/paths/**` – individual operation files (Auth, Links, Raids, Arts) referenced by the root `paths`.
+
+### Design notes
+
+* **UI in production is intentionally public.** The `/docs` and `/openapi` endpoints are accessible in prod **by design** to speed up integration and testing. Protected resources still require valid JWTs; only the documentation is public.
+* Error/empty responses are modeled without bodies (e.g., `BadRequest`, `Unauthorized`, `NotFound`, `TooManyRequests`, `ServerError`, `Ok200/Empty200`). This mirrors the helpers `ok`, `badRequest`, `unauthorized`, `notFound`, `internalServerError`.
+* The spec is **JSON-only** and directly read by Swagger UI; no build step is required after editing `docs/**/*.json`.
+
+### How to update
+
+1. Add or change schemas in `docs/components/schemas.json`.
+2. Reuse the shared responses/parameters from `docs/components/*.json`.
+3. Create or edit operations under `docs/paths/**` and reference them from `docs/openapi.json`.
+4. Open `/docs` to see the updated UI (the server serves the JSON files directly).
+
+> If you ever want to **lock down** docs in production, you can remove the `/docs` and `/openapi` mounts or guard them behind auth. For now, they remain public on purpose.
+
+---
+
 ### Raids (protected)
 
 - `GET /raids` → `Raid[]` (cached until EOD).
@@ -150,9 +185,16 @@ All inbound/outbound data is parsed with Zod before use; invalid shapes short-ci
 
 ## 🧰 Logging & Errors
 
-- **morgan** custom format: timestamp (`pt-BR`), colored status, response time, and content length.
-- Console patched to include datestamps and colors via **chalk**.
-- Helpers: `sendJson(200)`, `endResponseWithCode(status)`, `notFound(404)`, `internalServerError(500)`. Controllers log structured errors with context.
+- **morgan** custom format: timestamp (`pt-BR`), colored status code, response time, and content length.
+- Console patched with datestamps and colors via **chalk**.
+- HTTP helpers (no body unless `sendJson`):
+
+  - `ok(res)` → **200** (empty body)
+  - `sendJson(res, data)` → **200** with JSON
+  - `badRequest(res)` → **400**
+  - `unauthorized(res)` → **401**
+  - `notFound(res)` → **404**
+  - `internalServerError(res)` → **500**
 
 ---
 

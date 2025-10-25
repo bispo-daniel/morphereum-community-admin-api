@@ -4,7 +4,7 @@ import { artsCache } from '@/cache/index.js';
 import type { Arts } from '@/models/arts/index.js';
 import * as s from '@/services/arts/getArts.js';
 import {
-  endResponseWithCode,
+  badRequest,
   internalServerError,
   notFound,
   sendJson,
@@ -21,7 +21,7 @@ const getArts = async (req: Request, res: Response) => {
       error: 'Missing page query parameter',
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   const cacheKey = `artsData-page-${page}`;

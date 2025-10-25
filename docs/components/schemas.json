@@ -1,0 +1,111 @@
+{
+  "components": {
+    "schemas": {
+      "ArtSchema": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "approved": { "type": "boolean" },
+          "name": { "type": "string" },
+          "creator": { "type": "string" },
+          "xProfile": { "type": "string" },
+          "description": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        },
+        "required": [
+          "_id",
+          "approved",
+          "name",
+          "creator",
+          "xProfile",
+          "description",
+          "url"
+        ]
+      },
+      "LinkSchema": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "label": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "icon": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["community-links", "official-links"]
+          }
+        },
+        "required": ["_id", "label", "url", "icon", "type"]
+      },
+      "RaidSchema": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "date": { "type": "string", "format": "date-time" },
+          "platform": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "shareMessage": { "type": "string" },
+          "content": { "type": "string" }
+        },
+        "required": [
+          "_id",
+          "date",
+          "platform",
+          "url",
+          "shareMessage",
+          "content"
+        ]
+      },
+      "AuthRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        }
+      },
+      "LinkRequest": {
+        "type": "object",
+        "required": ["label", "url", "icon", "type"],
+        "properties": {
+          "label": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "icon": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["community-links", "official-links"]
+          }
+        }
+      },
+      "RaidRequest": {
+        "type": "object",
+        "required": ["content", "date", "platform", "shareMessage", "url"],
+        "properties": {
+          "content": { "type": "string" },
+          "date": { "type": "string", "format": "date-time" },
+          "platform": { "type": "string" },
+          "shareMessage": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "required": ["token"],
+        "properties": {
+          "token": { "type": "string", "description": "JWT" }
+        }
+      },
+      "GetArtsResponse": {
+        "type": "object",
+        "properties": {
+          "arts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ArtSchema" }
+          },
+          "page": { "type": "integer", "minimum": 1 },
+          "next": { "type": "boolean" }
+        },
+        "required": ["arts", "page", "next"]
+      }
+    }
+  }
+}

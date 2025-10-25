@@ -1,0 +1,39 @@
+{
+  "get": {
+    "tags": ["Arts"],
+    "security": [{ "bearerAuth": [] }],
+    "summary": "Listar artes paginadas",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters.json#/components/parameters/PageQuery"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas.json#/components/schemas/GetArtsResponse"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses.json#/components/responses/BadRequest"
+      },
+      "401": {
+        "$ref": "../../components/responses.json#/components/responses/Unauthorized"
+      },
+      "404": {
+        "$ref": "../../components/responses.json#/components/responses/NotFound"
+      },
+      "429": {
+        "$ref": "../../components/responses.json#/components/responses/TooManyRequests"
+      },
+      "500": {
+        "$ref": "../../components/responses.json#/components/responses/ServerError"
+      }
+    }
+  }
+}

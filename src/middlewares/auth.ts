@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthModel } from '@/models/auth/index.js';
-import { endResponseWithCode } from '@/utils/http.js';
+import { unauthorized } from '@/utils/http.js';
 import { env } from '@/config/index.js';
 import logError from '@/utils/logError.js';
 
@@ -19,7 +19,7 @@ const authMiddleware = async (
       error: 'Missing token',
     });
 
-    return endResponseWithCode(res, 401);
+    return unauthorized(res);
   }
 
   try {
@@ -32,7 +32,7 @@ const authMiddleware = async (
         error: 'Invalid token',
       });
 
-      return endResponseWithCode(res, 401);
+      return unauthorized(res);
     }
 
     const _id = decoded.id;
@@ -49,7 +49,7 @@ const authMiddleware = async (
         error: 'User not found',
       });
 
-      return endResponseWithCode(res, 401);
+      return unauthorized(res);
     }
 
     next();
@@ -60,7 +60,7 @@ const authMiddleware = async (
       error: "Catched error while verifying user's token. Error: " + error,
     });
 
-    endResponseWithCode(res, 401);
+    return unauthorized(res);
   }
 };
 

@@ -1,0 +1,20 @@
+{
+  "components": {
+    "parameters": {
+      "PathId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "MongoDB document id"
+      },
+      "PageQuery": {
+        "name": "page",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "integer", "minimum": 1, "example": 1 },
+        "description": "Página (10 itens/página)"
+      }
+    }
+  }
+}

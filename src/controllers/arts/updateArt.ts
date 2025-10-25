@@ -5,7 +5,8 @@ import { publishFlush } from '@/messaging/publish.js';
 import { ArtsSchema } from '@/models/arts/index.js';
 import * as s from '@/services/arts/updateArt.js';
 import {
-  endResponseWithCode,
+  badRequest,
+  ok,
   internalServerError,
   notFound,
 } from '@/utils/http.js';
@@ -24,7 +25,7 @@ const updateArt = async (req: Request, res: Response) => {
       error: 'ID is required and must be a string',
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   if (!result.success) {
@@ -34,7 +35,7 @@ const updateArt = async (req: Request, res: Response) => {
       error: result.error.format(),
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   try {
@@ -56,8 +57,8 @@ const updateArt = async (req: Request, res: Response) => {
     artsCache.del(cacheKeys);
 
     await publishFlush('arts');
-
-    return endResponseWithCode(res, 200);
+    
+    return ok(res);
   } catch (error) {
     logError({
       type: 'internal-server-error',

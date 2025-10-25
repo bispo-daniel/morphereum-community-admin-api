@@ -1,0 +1,42 @@
+{
+  "post": {
+    "tags": ["Raids"],
+    "security": [{ "bearerAuth": [] }],
+    "summary": "Criar raid",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["content", "date", "platform", "shareMessage", "url"],
+            "properties": {
+              "content": { "type": "string" },
+              "date": { "type": "string", "format": "date-time" },
+              "platform": { "type": "string" },
+              "shareMessage": { "type": "string" },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "$ref": "../../components/responses.json#/components/responses/Empty200"
+      },
+      "400": {
+        "$ref": "../../components/responses.json#/components/responses/BadRequest"
+      },
+      "401": {
+        "$ref": "../../components/responses.json#/components/responses/Unauthorized"
+      },
+      "429": {
+        "$ref": "../../components/responses.json#/components/responses/TooManyRequests"
+      },
+      "500": {
+        "$ref": "../../components/responses.json#/components/responses/ServerError"
+      }
+    }
+  }
+}
