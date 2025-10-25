@@ -35,7 +35,7 @@
         "$ref": "../../components/responses.json#/components/responses/TooManyRequests"
       },
       "500": {
-        "$ref": "../../components/responses.json#/components/responses/ServerError"
+        "$ref": "../../components/responses.json#/components/responses/InternalServerError"
       }
     }
   }

@@ -19,7 +19,7 @@
       "TooManyRequests": {
         "description": "Too Many Requests — rate limit exceeded. (no body)"
       },
-      "ServerError": {
+      "InternalServerError": {
         "description": "Internal Server Error — unexpected error on the server. (no body)"
       }
     }

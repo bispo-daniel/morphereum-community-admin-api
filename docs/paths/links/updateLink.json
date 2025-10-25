@@ -4,7 +4,9 @@
     "security": [{ "bearerAuth": [] }],
     "summary": "Atualizar link",
     "parameters": [
-      { "$ref": "../../components/parameters.json#/components/parameters/PathId" }
+      {
+        "$ref": "../../components/parameters.json#/components/parameters/PathId"
+      }
     ],
     "requestBody": {
       "required": true,
@@ -17,19 +19,34 @@
               "label": { "type": "string" },
               "url": { "type": "string", "format": "uri" },
               "icon": { "type": "string" },
-              "type": { "type": "string", "enum": ["community-links", "official-links"] }
+              "type": {
+                "type": "string",
+                "enum": ["community-links", "official-links"]
+              }
             }
           }
         }
       }
     },
     "responses": {
-      "200": { "$ref": "../../components/responses.json#/components/responses/Empty200" },
-      "400": { "$ref": "../../components/responses.json#/components/responses/BadRequest" },
-      "401": { "$ref": "../../components/responses.json#/components/responses/Unauthorized" },
-      "404": { "$ref": "../../components/responses.json#/components/responses/NotFound" },
-      "429": { "$ref": "../../components/responses.json#/components/responses/TooManyRequests" },
-      "500": { "$ref": "../../components/responses.json#/components/responses/ServerError" }
+      "200": {
+        "$ref": "../../components/responses.json#/components/responses/Empty200"
+      },
+      "400": {
+        "$ref": "../../components/responses.json#/components/responses/BadRequest"
+      },
+      "401": {
+        "$ref": "../../components/responses.json#/components/responses/Unauthorized"
+      },
+      "404": {
+        "$ref": "../../components/responses.json#/components/responses/NotFound"
+      },
+      "429": {
+        "$ref": "../../components/responses.json#/components/responses/TooManyRequests"
+      },
+      "500": {
+        "$ref": "../../components/responses.json#/components/responses/InternalServerError"
+      }
     }
   }
 }
