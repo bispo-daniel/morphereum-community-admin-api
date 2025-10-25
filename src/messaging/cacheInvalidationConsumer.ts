@@ -2,8 +2,6 @@ import { getChannel } from './rabbit.js';
 import { env } from '@/config/index.js';
 import {
   flushArtsCache,
-  flushLinksCache,
-  flushRaidCache,
 } from '@/cache/index.js';
 
 export const startCacheInvalidationConsumer = async () => {
@@ -40,8 +38,6 @@ export const startCacheInvalidationConsumer = async () => {
 
       try {
         if (key === 'arts.flush') flushArtsCache();
-        if (key === 'links.flush') flushLinksCache();
-        if (key === 'raids.flush') flushRaidCache();
 
         console.log(`[rabbitmq] --> consumed ${key} (flush-all done)`);
         ch.ack(msg);
