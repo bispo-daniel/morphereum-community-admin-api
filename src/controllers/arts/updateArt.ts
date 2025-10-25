@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import { artsCache } from '@/controllers/arts/getArts.js';
+import { artsCache } from '@/cache/index.js';
+import { publishFlush } from '@/messaging/publish.js';
 import { ArtsSchema } from '@/models/arts/index.js';
 import * as s from '@/services/arts/updateArt.js';
 import {
@@ -55,6 +56,8 @@ const updateArt = async (req: Request, res: Response) => {
       .filter((key) => key.startsWith('artsData-page-'));
     artsCache.del(cacheKeys);
 
+    await publishFlush('arts');
+    
     return ok(res);
   } catch (error) {
     logError({

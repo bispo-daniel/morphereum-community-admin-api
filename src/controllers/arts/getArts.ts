@@ -1,9 +1,8 @@
 import { type Request, type Response } from 'express';
-import NodeCache from 'node-cache';
 
+import { artsCache } from '@/cache/index.js';
 import type { Arts } from '@/models/arts/index.js';
 import * as s from '@/services/arts/getArts.js';
-import { getEndOfDayTTL } from '@/utils/getEndOfDayTTL.js';
 import {
   badRequest,
   internalServerError,
@@ -11,9 +10,6 @@ import {
   sendJson,
 } from '@/utils/http.js';
 import logError from '@/utils/logError.js';
-
-const artsTTL = getEndOfDayTTL();
-export const artsCache = new NodeCache({ stdTTL: artsTTL });
 
 const getArts = async (req: Request, res: Response) => {
   const { page } = req.query;

@@ -14,6 +14,8 @@
   "license": "AGPL-3.0-only",
   "description": "The API for the Morphereum Community admin website",
   "dependencies": {
+    "@types/amqplib": "^0.10.8",
+    "amqplib": "^0.10.9",
     "chalk": "^5.4.1",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",

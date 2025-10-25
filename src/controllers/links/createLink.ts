@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import { linksCache } from '@/controllers/links/getLinks.js';
+import { linksCache } from '@/cache/index.js';
+import { publishFlush } from '@/messaging/publish.js';
 import { LinkSchema } from '@/models/links/index.js';
 import * as s from '@/services/links/createLink.js';
 import { badRequest, ok, internalServerError } from '@/utils/http.js';
@@ -28,6 +29,8 @@ const createLink = async (req: Request, res: Response) => {
 
     linksCache.del('linksData');
 
+    await publishFlush('links');
+    
     return ok(res);
   } catch (error) {
     logError({
