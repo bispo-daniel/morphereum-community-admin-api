@@ -150,9 +150,16 @@ All inbound/outbound data is parsed with Zod before use; invalid shapes short-ci
 
 ## 🧰 Logging & Errors
 
-- **morgan** custom format: timestamp (`pt-BR`), colored status, response time, and content length.
-- Console patched to include datestamps and colors via **chalk**.
-- Helpers: `sendJson(200)`, `endResponseWithCode(status)`, `notFound(404)`, `internalServerError(500)`. Controllers log structured errors with context.
+- **morgan** custom format: timestamp (`pt-BR`), colored status code, response time, and content length.
+- Console patched with datestamps and colors via **chalk**.
+- HTTP helpers (no body unless `sendJson`):
+
+  - `ok(res)` → **200** (empty body)
+  - `sendJson(res, data)` → **200** with JSON
+  - `badRequest(res)` → **400**
+  - `unauthorized(res)` → **401**
+  - `notFound(res)` → **404**
+  - `internalServerError(res)` → **500**
 
 ---
 

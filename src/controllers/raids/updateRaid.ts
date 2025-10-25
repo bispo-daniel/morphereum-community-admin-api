@@ -3,11 +3,7 @@ import { type Request, type Response } from 'express';
 import { raidCache } from '@/controllers/raids/getRaids.js';
 import { RaidSchema } from '@/models/raids/index.js';
 import * as s from '@/services/raids/updateRaid.js';
-import {
-  endResponseWithCode,
-  internalServerError,
-  notFound,
-} from '@/utils/http.js';
+import { badRequest, ok, internalServerError, notFound } from '@/utils/http.js';
 import logError from '@/utils/logError.js';
 
 const updateRaid = async (req: Request, res: Response) => {
@@ -21,7 +17,7 @@ const updateRaid = async (req: Request, res: Response) => {
       error: 'ID is required and must be a string',
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   if (!result.success) {
@@ -31,7 +27,7 @@ const updateRaid = async (req: Request, res: Response) => {
       error: result.error,
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   try {
@@ -49,7 +45,7 @@ const updateRaid = async (req: Request, res: Response) => {
 
     raidCache.del('raidsData');
 
-    return endResponseWithCode(res, 200);
+    return ok(res);
   } catch (error) {
     logError({
       type: 'internal-server-error',

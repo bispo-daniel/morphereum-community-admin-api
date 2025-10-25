@@ -2,11 +2,7 @@ import { type Request, type Response } from 'express';
 
 import { raidCache } from '@/controllers/raids/getRaids.js';
 import * as s from '@/services/raids/removeRaid.js';
-import {
-  endResponseWithCode,
-  internalServerError,
-  notFound,
-} from '@/utils/http.js';
+import { badRequest, ok, internalServerError, notFound } from '@/utils/http.js';
 import logError from '@/utils/logError.js';
 
 const removeRaid = async (req: Request, res: Response) => {
@@ -19,7 +15,7 @@ const removeRaid = async (req: Request, res: Response) => {
       error: 'ID is required and must be a string',
     });
 
-    return endResponseWithCode(res, 400);
+    return badRequest(res);
   }
 
   try {
@@ -37,7 +33,7 @@ const removeRaid = async (req: Request, res: Response) => {
 
     raidCache.del('raidsData');
 
-    return endResponseWithCode(res, 200);
+    return ok(res);
   } catch (error) {
     logError({
       type: 'internal-server-error',
