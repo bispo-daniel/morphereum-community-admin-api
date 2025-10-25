@@ -1,0 +1,4 @@
+{
+  "get": { "$ref": "./getRaids.json#/get" },
+  "post": { "$ref": "./createRaid.json#/post" }
+}

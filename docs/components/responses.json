@@ -1,0 +1,27 @@
+{
+  "components": {
+    "responses": {
+      "Empty200": {
+        "description": "OK — empty body"
+      },
+      "Ok200": {
+        "description": "OK — empty body"
+      },
+      "BadRequest": {
+        "description": "Bad Request — missing required fields, malformed JSON, or validation errors. (no body)"
+      },
+      "Unauthorized": {
+        "description": "Unauthorized — missing or invalid authentication token. (no body)"
+      },
+      "NotFound": {
+        "description": "Not Found — the requested resource does not exist. (no body)"
+      },
+      "TooManyRequests": {
+        "description": "Too Many Requests — rate limit exceeded. (no body)"
+      },
+      "ServerError": {
+        "description": "Internal Server Error — unexpected error on the server. (no body)"
+      }
+    }
+  }
+}

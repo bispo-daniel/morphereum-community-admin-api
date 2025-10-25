@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Morphereum Admin API",
+    "version": "1.0.0",
+    "description": "Documentação modular (JSON-only) da Admin API."
+  },
+  "servers": [
+    { "url": "https://localhost:3001/api", "description": "localhost" }
+  ],
+  "tags": [
+    { "name": "Auth" },
+    { "name": "Arts" },
+    { "name": "Links" },
+    { "name": "Raids" }
+  ],
+  "components": {
+    "schemas": {
+      "ArtSchema": {
+        "$ref": "./components/schemas.json#/components/schemas/ArtSchema"
+      },
+      "LinkSchema": {
+        "$ref": "./components/schemas.json#/components/schemas/LinkSchema"
+      },
+      "RaidSchema": {
+        "$ref": "./components/schemas.json#/components/schemas/RaidSchema"
+      },
+
+      "AuthRequest": {
+        "$ref": "./components/schemas.json#/components/schemas/AuthRequest"
+      },
+      "LinkRequest": {
+        "$ref": "./components/schemas.json#/components/schemas/LinkRequest"
+      },
+      "RaidRequest": {
+        "$ref": "./components/schemas.json#/components/schemas/RaidRequest"
+      },
+
+      "AuthResponse": {
+        "$ref": "./components/schemas.json#/components/schemas/AuthResponse"
+      },
+      "GetArtsResponse": {
+        "$ref": "./components/schemas.json#/components/schemas/GetArtsResponse"
+      }
+    },
+    "responses": {
+      "$ref": "./components/responses.json#/components/responses"
+    },
+    "parameters": {
+      "$ref": "./components/parameters.json#/components/parameters"
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/auth": { "$ref": "./paths/auth/login.json" },
+    "/arts": { "$ref": "./paths/arts/getArts.json" },
+    "/arts/{id}": { "$ref": "./paths/arts/byId.json" },
+    "/links": { "$ref": "./paths/links/index.json" },
+    "/links/{id}": { "$ref": "./paths/links/byId.json" },
+    "/raids": { "$ref": "./paths/raids/index.json" },
+    "/raids/{id}": { "$ref": "./paths/raids/byId.json" }
+  },
+  "security": [{ "bearerAuth": [] }]
+}

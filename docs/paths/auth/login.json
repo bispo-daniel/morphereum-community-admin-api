@@ -1,0 +1,38 @@
+{
+  "post": {
+    "tags": ["Auth"],
+    "summary": "Obter token JWT",
+    "security": [],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../components/schemas.json#/components/schemas/AuthRequest"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Login ok",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../../components/schemas.json#/components/schemas/AuthResponse"
+            }
+          }
+        }
+      },
+      "400": {
+        "$ref": "../../components/responses.json#/components/responses/BadRequest"
+      },
+      "401": {
+        "$ref": "../../components/responses.json#/components/responses/Unauthorized"
+      },
+      "500": {
+        "$ref": "../../components/responses.json#/components/responses/ServerError"
+      }
+    }
+  }
+}

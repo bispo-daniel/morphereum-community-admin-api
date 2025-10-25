@@ -1,0 +1,42 @@
+{
+  "put": {
+    "tags": ["Raids"],
+    "security": [{ "bearerAuth": [] }],
+    "summary": "Atualizar raid",
+    "parameters": [
+      {
+        "$ref": "../../components/parameters.json#/components/parameters/PathId"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../../components/schemas.json#/components/schemas/RaidRequest"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "$ref": "../../components/responses.json#/components/responses/Empty200"
+      },
+      "400": {
+        "$ref": "../../components/responses.json#/components/responses/BadRequest"
+      },
+      "401": {
+        "$ref": "../../components/responses.json#/components/responses/Unauthorized"
+      },
+      "404": {
+        "$ref": "../../components/responses.json#/components/responses/NotFound"
+      },
+      "429": {
+        "$ref": "../../components/responses.json#/components/responses/TooManyRequests"
+      },
+      "500": {
+        "$ref": "../../components/responses.json#/components/responses/ServerError"
+      }
+    }
+  }
+}
