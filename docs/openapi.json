@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Morphereum Admin API",
+    "title": "Morphereum Community Admin API — Docs",
     "version": "1.0.0",
     "description": "Secure, internal endpoints for moderating community content and managing public data sources used by the Morphereum Community API. This spec follows a modular, JSON-only structure with $ref pointers for paths and reusable components. All routes are served under /api and, unless noted, require a valid Bearer JWT for access."
   },
