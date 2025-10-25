@@ -13,6 +13,9 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string().nonempty(),
   CORS_ORIGIN: z.string().nonempty(),
   JWT_SECRET_KEY: z.string().nonempty(),
+  RABBITMQ_URL: z.string().nonempty(),
+  RABBITMQ_EXCHANGE: z.string().default('cache.flush'),
+  ART_RECORDS_PER_PAGE: z.coerce.number().min(1).default(10),
 });
 
 export const env = envSchema.parse(process.env);

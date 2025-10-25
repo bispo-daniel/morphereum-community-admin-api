@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express';
 
-import { raidCache } from '@/controllers/raids/getRaids.js';
+import { raidCache } from '@/cache/index.js';
 import * as s from '@/services/raids/removeRaid.js';
 import {
   endResponseWithCode,
@@ -8,6 +8,7 @@ import {
   notFound,
 } from '@/utils/http.js';
 import logError from '@/utils/logError.js';
+import { publishFlush } from '@/messaging/publish.js';
 
 const removeRaid = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -36,6 +37,8 @@ const removeRaid = async (req: Request, res: Response) => {
     }
 
     raidCache.del('raidsData');
+
+    await publishFlush('raids');
 
     return endResponseWithCode(res, 200);
   } catch (error) {

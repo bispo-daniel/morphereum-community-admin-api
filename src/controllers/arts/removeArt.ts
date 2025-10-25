@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import { artsCache } from '@/controllers/arts/getArts.js';
+import { artsCache } from '@/cache/index.js';
+import { publishFlush } from '@/messaging/publish.js';
 import * as s from '@/services/arts/removeArt.js';
 import {
   endResponseWithCode,
@@ -39,6 +40,8 @@ const removeArt = async (req: Request, res: Response) => {
       .keys()
       .filter((key) => key.startsWith('artsData-page-'));
     artsCache.del(cacheKeys);
+
+    await publishFlush('arts');
 
     return endResponseWithCode(res, 200);
   } catch (error) {

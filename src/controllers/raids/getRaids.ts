@@ -1,14 +1,10 @@
 import { type Request, type Response } from 'express';
-import NodeCache from 'node-cache';
 
+import { raidCache } from '@/cache/index.js';
 import type { Raid } from '@/models/raids/index.js';
 import * as s from '@/services/raids/getRaids.js';
-import { getEndOfDayTTL } from '@/utils/getEndOfDayTTL.js';
 import { internalServerError, notFound, sendJson } from '@/utils/http.js';
 import logError from '@/utils/logError.js';
-
-const raidTTL = getEndOfDayTTL();
-export const raidCache = new NodeCache({ stdTTL: raidTTL });
 
 const getRaids = async (_req: Request, res: Response) => {
   const cacheKey = 'raidsData';

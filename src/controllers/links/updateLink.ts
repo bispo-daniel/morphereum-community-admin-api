@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import { linksCache } from '@/controllers/links/getLinks.js';
+import { linksCache } from '@/cache/index.js';
+import { publishFlush } from '@/messaging/publish.js';
 import { LinkSchema } from '@/models/links/index.js';
 import * as s from '@/services/links/updateLink.js';
 import {
@@ -52,6 +53,8 @@ const updateLink = async (req: Request, res: Response) => {
     }
 
     linksCache.del('linksData');
+
+    await publishFlush('links');
 
     return endResponseWithCode(res, 200);
   } catch (error) {
