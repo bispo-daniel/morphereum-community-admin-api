@@ -2,7 +2,7 @@
   "put": {
     "tags": ["Raids"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Atualizar raid",
+    "summary": "Update raid by ID",
     "parameters": [
       {
         "$ref": "../../components/parameters.json#/components/parameters/PathId"

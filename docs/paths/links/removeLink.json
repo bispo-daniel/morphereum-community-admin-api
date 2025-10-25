@@ -2,7 +2,7 @@
   "delete": {
     "tags": ["Links"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Remover link",
+    "summary": "Remove link by ID",
     "parameters": [
       {
         "$ref": "../../components/parameters.json#/components/parameters/PathId"

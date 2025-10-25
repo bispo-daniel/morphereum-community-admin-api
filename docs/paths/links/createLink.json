@@ -2,7 +2,7 @@
   "post": {
     "tags": ["Links"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Criar link",
+    "summary": "Create link",
     "requestBody": {
       "required": true,
       "content": {

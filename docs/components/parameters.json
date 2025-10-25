@@ -13,7 +13,7 @@
         "in": "query",
         "required": true,
         "schema": { "type": "integer", "minimum": 1, "example": 1 },
-        "description": "Página (10 itens/página)"
+        "description": "Page (10 items/page)"
       }
     }
   }

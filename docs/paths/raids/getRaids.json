@@ -2,10 +2,10 @@
   "get": {
     "tags": ["Raids"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Listar raids",
+    "summary": "Get raids",
     "responses": {
       "200": {
-        "description": "Lista de raids",
+        "description": "List of raids",
         "content": {
           "application/json": {
             "schema": {

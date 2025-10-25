@@ -2,7 +2,7 @@
   "delete": {
     "tags": ["Raids"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Remover raid",
+    "summary": "Remove raid by ID",
     "parameters": [
       {
         "$ref": "../../components/parameters.json#/components/parameters/PathId"

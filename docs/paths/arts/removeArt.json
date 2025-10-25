@@ -2,7 +2,7 @@
   "delete": {
     "tags": ["Arts"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Remover arte",
+    "summary": "Remove art by ID",
     "parameters": [
       {
         "$ref": "../../components/parameters.json#/components/parameters/PathId"

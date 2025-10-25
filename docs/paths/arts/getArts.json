@@ -2,7 +2,7 @@
   "get": {
     "tags": ["Arts"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Listar artes paginadas",
+    "summary": "Get Arts",
     "parameters": [
       {
         "$ref": "../../components/parameters.json#/components/parameters/PageQuery"
@@ -10,7 +10,7 @@
     ],
     "responses": {
       "200": {
-        "description": "OK",
+        "description": "List of paginated arts",
         "content": {
           "application/json": {
             "schema": {

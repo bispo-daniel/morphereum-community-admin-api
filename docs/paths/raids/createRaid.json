@@ -2,7 +2,7 @@
   "post": {
     "tags": ["Raids"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Criar raid",
+    "summary": "Create raid",
     "requestBody": {
       "required": true,
       "content": {

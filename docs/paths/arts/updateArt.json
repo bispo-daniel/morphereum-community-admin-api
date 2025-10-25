@@ -2,7 +2,7 @@
   "put": {
     "tags": ["Arts"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Atualizar status de aprovação",
+    "summary": "Update art approval status by ID",
     "parameters": [
       {
         "$ref": "../../components/parameters.json#/components/parameters/PathId"

@@ -2,7 +2,7 @@
   "put": {
     "tags": ["Links"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Atualizar link",
+    "summary": "Update link by ID",
     "parameters": [
       {
         "$ref": "../../components/parameters.json#/components/parameters/PathId"

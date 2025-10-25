@@ -2,10 +2,10 @@
   "get": {
     "tags": ["Links"],
     "security": [{ "bearerAuth": [] }],
-    "summary": "Listar links",
+    "summary": "Get links",
     "responses": {
       "200": {
-        "description": "Lista de links",
+        "description": "List of links",
         "content": {
           "application/json": {
             "schema": {
