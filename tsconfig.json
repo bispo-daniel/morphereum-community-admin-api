@@ -19,9 +19,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmitOnError": true,
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"],
     },
     "plugins": [
       { "transform": "typescript-transform-paths" },
