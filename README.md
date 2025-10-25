@@ -258,19 +258,24 @@ Validated on startup; process exits if invalid.
 # Core
 NODE_ENV=development            # or production
 PORT=8082
+ART_RECORDS_PER_PAGE=10
+
+# Middlewares
 CORS_ORIGIN=https://admin.morphereum.app
+JWT_SECRET_KEY=super-secret-key
 
 # Database
 MONGODB_CONNECTION_STRING=mongodb+srv://...
 MONGODB_DB_NAME=morphereum
 
-# Auth
-JWT_SECRET_KEY=super-secret-key
-
 # Cloudinary (asset deletion for Arts)
 CLOUDINARY_CLOUD_NAME=...
 CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
+
+# RabbitMQ
+RABBITMQ_URL=amqps://<user>:<pass>@<host>/<vhost>
+RABBITMQ_EXCHANGE=cache.flush
 ```
 
 > In **development**, the server attempts HTTPS using `localhost.pem` and `localhost-key.pem` at the project root.
