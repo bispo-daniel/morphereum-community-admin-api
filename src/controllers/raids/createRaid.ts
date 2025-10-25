@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import { raidCache } from '@/controllers/raids/getRaids.js';
+import { raidCache } from '@/cache/index.js';
+import { publishFlush } from '@/messaging/publish.js';
 import { RaidSchema } from '@/models/raids/index.js';
 import * as s from '@/services/raids/createRaid.js';
 import { endResponseWithCode, internalServerError } from '@/utils/http.js';
@@ -27,6 +28,8 @@ const createRaid = async (req: Request, res: Response) => {
     await s.create({ content, date, platform, shareMessage, url });
 
     raidCache.del('raidsData');
+
+    await publishFlush('raids');
 
     return endResponseWithCode(res, 200);
   } catch (error) {

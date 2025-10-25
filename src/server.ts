@@ -15,6 +15,7 @@ import { cert } from '@/config/cert.js';
 import { env } from '@/config/index.js';
 import { router } from '@/router/index.js';
 import { connectToMongoDb } from '@/utils/connectToMongoDb.js';
+import { startCacheInvalidationConsumer } from '@/messaging/cacheInvalidationConsumer.js';
 
 import { getEndOfDayTTL } from './utils/getEndOfDayTTL.js';
 
@@ -95,6 +96,10 @@ app.use(express.json());
 app.use('/api', router);
 
 connectToMongoDb();
+
+startCacheInvalidationConsumer().catch((e) => {
+  console.warn('[rabbitmq] --> consumer failed to start', e);
+});
 
 const endOfDayTTL = getEndOfDayTTL();
 const hours = Math.floor(endOfDayTTL / 3600);

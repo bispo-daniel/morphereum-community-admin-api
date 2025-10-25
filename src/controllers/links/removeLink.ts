@@ -1,6 +1,7 @@
 import { type Request, type Response } from 'express';
 
-import { linksCache } from '@/controllers/links/getLinks.js';
+import { linksCache } from '@/cache/index.js';
+import { publishFlush } from '@/messaging/publish.js';
 import * as s from '@/services/links/removeLink.js';
 import {
   endResponseWithCode,
@@ -36,6 +37,8 @@ const removeLink = async (req: Request, res: Response) => {
     }
 
     linksCache.del('linksData');
+
+    await publishFlush('links');
 
     return endResponseWithCode(res, 200);
   } catch (error) {
