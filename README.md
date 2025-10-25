@@ -99,6 +99,58 @@ The spec is **modular JSON** under `docs/`:
 
 ---
 
+# 🔁 Cross-API Cache Invalidation (RabbitMQ / CloudAMQP)
+
+**Why messaging?**
+Yes — cross-API cache invalidation can be solved with simpler approaches (e.g., a private HTTP endpoint that one API calls on the other to clear caches). This project intentionally uses RabbitMQ (CloudAMQP – Little Lemur) to learn and practice message-driven patterns.
+
+## Summary
+
+* Goal: keep caches in sync across two APIs when mutations happen.
+* Approach: after each mutation, this API clears its own NodeCache and publishes a small event to a topic exchange; other services can listen and clear their caches immediately.
+* Broker: RabbitMQ via CloudAMQP.
+* Exchange: topic exchange dedicated to cache-flush events.
+* Routing keys currently used by this service: `arts.flush`, `links.flush`, `raids.flush`.
+* Message contents (conceptual): event type, timestamp, and a `source` identifier (allows a service to ignore its own events if desired).
+
+## Publishers (Senders)
+
+After successfully mutating data and clearing the local cache, these controllers publish a cache-flush event:
+
+* Arts: `src/controllers/arts/updateArt.ts`, `src/controllers/arts/removeArt.ts` → publishes `arts.flush`
+* Links: `src/controllers/links/createLink.ts`, `src/controllers/links/updateLink.ts`, `src/controllers/links/removeLink.ts` → publishes `links.flush`
+* Raids: `src/controllers/raids/createRaid.ts`, `src/controllers/raids/updateRaid.ts`, `src/controllers/raids/removeRaid.ts` → publishes `raids.flush`
+
+## Consumer (Listener)
+
+* Current binding: the consumer is intentionally bound only to `arts.flush`.
+* Effect: when an `arts.flush` event is received, all Arts cache pages are cleared (e.g., paginated entries).
+* Self-skip: events may carry a `source` tag so the service can ignore its own publishes.
+
+## Environment & Conventions
+
+* Broker URL: provided via environment variable pointing to CloudAMQP.
+* Exchange name: topic exchange used for cache-flush events (e.g., `cache.flush`).
+* Routing keys: `arts.flush`, `links.flush`, `raids.flush` (listener currently bound to `arts.flush` only).
+* Delivery semantics: lightweight, non-critical notifications favoring eventual consistency; duplicate deliveries are acceptable because cache flushes are idempotent.
+
+## Operational Notes
+
+* Startup: publisher and consumer are initialized when the server boots.
+* Observability: use the CloudAMQP dashboard to check connections, message rates, and bindings.
+* Failure behavior: if the broker is unavailable, local caches are still cleared; remote caches update once connectivity returns (eventual consistency).
+* Security: keep broker credentials out of source control; prefer per-environment credentials and least-privilege vhosts.
+* Performance: messages are small; cache flush operations are fast and bounded.
+
+## Quick Checklist
+
+* Configure CloudAMQP URL and the cache-flush topic exchange as environment variables.
+* Confirm that senders publish `arts.flush`, `links.flush`, and `raids.flush` after local mutations.
+* Confirm that the listener is currently bound only to `arts.flush` (by design).
+* If/when cross-API invalidation is needed for Links/Raids, add bindings for `links.flush` and `raids.flush` and connect them to their cache-clear routines.
+
+---
+
 ### Raids (protected)
 
 - `GET /raids` → `Raid[]` (cached until EOD).
