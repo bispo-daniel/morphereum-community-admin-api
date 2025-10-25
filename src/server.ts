@@ -106,6 +106,7 @@ app.use(
     swaggerOptions: {
       url: '/openapi/openapi.json',
     },
+    customSiteTitle: 'Morphereum Community Admin API — Docs',
   })
 );
 
