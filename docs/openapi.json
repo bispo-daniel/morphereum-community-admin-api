@@ -3,17 +3,32 @@
   "info": {
     "title": "Morphereum Admin API",
     "version": "1.0.0",
-    "description": "Documentação modular (JSON-only) da Admin API."
+    "description": "Secure, internal endpoints for moderating community content and managing public data sources used by the Morphereum Community API. This spec follows a modular, JSON-only structure with $ref pointers for paths and reusable components. All routes are served under /api and, unless noted, require a valid Bearer JWT for access."
   },
   "servers": [
     { "url": "https://localhost:3001/api", "description": "development" },
-    { "url": "https://morphereum-community-admin-api.onrender.com/api", "description": "production" }
+    {
+      "url": "https://morphereum-community-admin-api.onrender.com/api",
+      "description": "production"
+    }
   ],
   "tags": [
-    { "name": "Auth" },
-    { "name": "Arts" },
-    { "name": "Links" },
-    { "name": "Raids" }
+    {
+      "name": "Auth",
+      "description": "Authentication and token issuance. Contains the public login endpoint used to obtain a JWT. All other tags/routes require a valid Bearer token."
+    },
+    {
+      "name": "Arts",
+      "description": "Moderation tools for community artworks: list submissions (paginated), approve or reject items, and manage gallery entries."
+    },
+    {
+      "name": "Links",
+      "description": "CRUD for curated and official links exposed in the public API. Admins can create, update, reorder, and remove items."
+    },
+    {
+      "name": "Raids",
+      "description": "Manage the daily raid configuration: create/update the target, platform, share message, and related content displayed to the community."
+    }
   ],
   "components": {
     "schemas": {
