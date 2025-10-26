@@ -151,6 +151,37 @@ After successfully mutating data and clearing the local cache, these controllers
 
 ---
 
+## 🕵️ Observability (Sentry)
+
+This API ships with **Sentry** for runtime error tracking, **performance traces (APM)** and optional **CPU profiling**.
+
+* **Where it’s wired:** initialization + process handlers live in `src/observability/sentry.ts`, and are mounted in `src/server.ts` (initialized **before** routes and the error handler attached **after** the router). 
+* **What we capture:** Express errors (via `Sentry.setupExpressErrorHandler`), HTTP spans, unhandled rejections and uncaught exceptions. 
+* **Packages:** `@sentry/node` and `@sentry/profiling-node`. 
+
+### Configuration
+
+Add these env vars (already validated at boot):
+
+```env
+# sentry
+SENTRY_DSN=
+SENTRY_TRACES_SAMPLE_RATE=0.1     # 0.1 (APM)
+SENTRY_PROFILES_SAMPLE_RATE=0.1   # 0.1 (CPU profiling)
+```
+
+If `SENTRY_DSN` is blank, Sentry is **skipped** (boot logs a warning). Default sample rates fall back to `0` when not set. 
+
+### How it works
+
+* **`setupSentry(app)`**: initializes Sentry **before** routes with HTTP + Express integrations, **tracing (APM)** and **CPU profiling** via `@sentry/profiling-node`.
+* **`wireProcessHandlers()`**: forwards `unhandledRejection` and `uncaughtException` to Sentry.
+* **`attachSentryErrorHandler(app)`**: installs Sentry’s Express error middleware **after** the router.
+
+> Tip: start with low sample rates in production (e.g., `0.1`) and adjust as needed. 
+
+---
+
 ### Raids (protected)
 
 - `GET /raids` → `Raid[]` (cached until EOD).
