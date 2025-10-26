@@ -4,12 +4,7 @@ import { artsCache } from '@/cache/index.js';
 import { publishFlush } from '@/messaging/publish.js';
 import { ArtsSchema } from '@/models/arts/index.js';
 import * as s from '@/services/arts/updateArt.js';
-import {
-  badRequest,
-  ok,
-  internalServerError,
-  notFound,
-} from '@/utils/http.js';
+import { badRequest, ok, internalServerError, notFound } from '@/utils/http.js';
 import logError from '@/utils/logError.js';
 
 const bodySchema = ArtsSchema.element.pick({ approved: true });
@@ -57,7 +52,7 @@ const updateArt = async (req: Request, res: Response) => {
     artsCache.del(cacheKeys);
 
     await publishFlush('arts');
-    
+
     return ok(res);
   } catch (error) {
     logError({

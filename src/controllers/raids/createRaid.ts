@@ -30,7 +30,7 @@ const createRaid = async (req: Request, res: Response) => {
     raidCache.del('raidsData');
 
     await publishFlush('raids');
-    
+
     return ok(res);
   } catch (error) {
     logError({

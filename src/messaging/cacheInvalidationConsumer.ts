@@ -1,8 +1,6 @@
 import { getChannel } from './rabbit.js';
 import { env } from '@/config/index.js';
-import {
-  flushArtsCache,
-} from '@/cache/index.js';
+import { flushArtsCache } from '@/cache/index.js';
 
 export const startCacheInvalidationConsumer = async () => {
   const ch = await getChannel();

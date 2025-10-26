@@ -5,6 +5,6 @@ const ttl = getEndOfDayTTL();
 
 export const artsCache = new NodeCache({ stdTTL: ttl });
 export const linksCache = new NodeCache({ stdTTL: ttl });
-export const raidCache  = new NodeCache({ stdTTL: ttl });
+export const raidCache = new NodeCache({ stdTTL: ttl });
 
 export const flushArtsCache = () => artsCache.flushAll();

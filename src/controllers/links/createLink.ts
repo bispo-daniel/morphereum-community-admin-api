@@ -30,7 +30,7 @@ const createLink = async (req: Request, res: Response) => {
     linksCache.del('linksData');
 
     await publishFlush('links');
-    
+
     return ok(res);
   } catch (error) {
     logError({

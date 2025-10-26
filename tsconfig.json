@@ -20,7 +20,7 @@
     "noUnusedParameters": true,
     "noEmitOnError": true,
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
     "plugins": [
       { "transform": "typescript-transform-paths" },

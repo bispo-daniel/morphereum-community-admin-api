@@ -38,7 +38,7 @@ const removeArt = async (req: Request, res: Response) => {
     artsCache.del(cacheKeys);
 
     await publishFlush('arts');
-    
+
     return ok(res);
   } catch (error) {
     logError({

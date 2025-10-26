@@ -66,27 +66,28 @@ All routes are mounted under **`/api`**.
 
 ## 📚 API Documentation (Swagger / OpenAPI)
 
-* **Swagger UI** is served at: `http(s)://localhost:<PORT>/docs` (auto-mounted by the server).
-* **Raw OpenAPI JSON**: `http(s)://localhost:<PORT>/openapi/openapi.json`.
+- **Swagger UI** is served at: `http(s)://localhost:<PORT>/docs` (auto-mounted by the server).
+- **Raw OpenAPI JSON**: `http(s)://localhost:<PORT>/openapi/openapi.json`.
   Both routes are registered in `src/server.ts` via `swagger-ui-express` and a static mount of the `docs/` folder.
 
 ### How it’s organized
 
 The spec is **modular JSON** under `docs/`:
 
-* `docs/openapi.json` – root spec that composes everything else.
-* `docs/components/` – reusable **schemas**, **responses**, **parameters**.
+- `docs/openapi.json` – root spec that composes everything else.
+- `docs/components/` – reusable **schemas**, **responses**, **parameters**.
 
-  * Responses are “no-body” for errors and OK, matching the runtime helpers.
-  * Schemas for Auth, Links, Raids, Arts, and paginated arts response.
-  * Common params (e.g., `PathId`, `PageQuery`).
-* `docs/paths/**` – individual operation files (Auth, Links, Raids, Arts) referenced by the root `paths`.
+  - Responses are “no-body” for errors and OK, matching the runtime helpers.
+  - Schemas for Auth, Links, Raids, Arts, and paginated arts response.
+  - Common params (e.g., `PathId`, `PageQuery`).
+
+- `docs/paths/**` – individual operation files (Auth, Links, Raids, Arts) referenced by the root `paths`.
 
 ### Design notes
 
-* **UI in production is intentionally public.** The `/docs` and `/openapi` endpoints are accessible in prod **by design** to speed up integration and testing. Protected resources still require valid JWTs; only the documentation is public.
-* Error/empty responses are modeled without bodies (e.g., `BadRequest`, `Unauthorized`, `NotFound`, `TooManyRequests`, `ServerError`, `Ok200/Empty200`). This mirrors the helpers `ok`, `badRequest`, `unauthorized`, `notFound`, `internalServerError`.
-* The spec is **JSON-only** and directly read by Swagger UI; no build step is required after editing `docs/**/*.json`.
+- **UI in production is intentionally public.** The `/docs` and `/openapi` endpoints are accessible in prod **by design** to speed up integration and testing. Protected resources still require valid JWTs; only the documentation is public.
+- Error/empty responses are modeled without bodies (e.g., `BadRequest`, `Unauthorized`, `NotFound`, `TooManyRequests`, `ServerError`, `Ok200/Empty200`). This mirrors the helpers `ok`, `badRequest`, `unauthorized`, `notFound`, `internalServerError`.
+- The spec is **JSON-only** and directly read by Swagger UI; no build step is required after editing `docs/**/*.json`.
 
 ### How to update
 
@@ -106,48 +107,48 @@ Yes — cross-API cache invalidation can be solved with simpler approaches (e.g.
 
 ## Summary
 
-* Goal: keep caches in sync across two APIs when mutations happen.
-* Approach: after each mutation, this API clears its own NodeCache and publishes a small event to a topic exchange; other services can listen and clear their caches immediately.
-* Broker: RabbitMQ via CloudAMQP.
-* Exchange: topic exchange dedicated to cache-flush events.
-* Routing keys currently used by this service: `arts.flush`, `links.flush`, `raids.flush`.
-* Message contents (conceptual): event type, timestamp, and a `source` identifier (allows a service to ignore its own events if desired).
+- Goal: keep caches in sync across two APIs when mutations happen.
+- Approach: after each mutation, this API clears its own NodeCache and publishes a small event to a topic exchange; other services can listen and clear their caches immediately.
+- Broker: RabbitMQ via CloudAMQP.
+- Exchange: topic exchange dedicated to cache-flush events.
+- Routing keys currently used by this service: `arts.flush`, `links.flush`, `raids.flush`.
+- Message contents (conceptual): event type, timestamp, and a `source` identifier (allows a service to ignore its own events if desired).
 
 ## Publishers (Senders)
 
 After successfully mutating data and clearing the local cache, these controllers publish a cache-flush event:
 
-* Arts: `src/controllers/arts/updateArt.ts`, `src/controllers/arts/removeArt.ts` → publishes `arts.flush`
-* Links: `src/controllers/links/createLink.ts`, `src/controllers/links/updateLink.ts`, `src/controllers/links/removeLink.ts` → publishes `links.flush`
-* Raids: `src/controllers/raids/createRaid.ts`, `src/controllers/raids/updateRaid.ts`, `src/controllers/raids/removeRaid.ts` → publishes `raids.flush`
+- Arts: `src/controllers/arts/updateArt.ts`, `src/controllers/arts/removeArt.ts` → publishes `arts.flush`
+- Links: `src/controllers/links/createLink.ts`, `src/controllers/links/updateLink.ts`, `src/controllers/links/removeLink.ts` → publishes `links.flush`
+- Raids: `src/controllers/raids/createRaid.ts`, `src/controllers/raids/updateRaid.ts`, `src/controllers/raids/removeRaid.ts` → publishes `raids.flush`
 
 ## Consumer (Listener)
 
-* Current binding: the consumer is intentionally bound only to `arts.flush`.
-* Effect: when an `arts.flush` event is received, all Arts cache pages are cleared (e.g., paginated entries).
-* Self-skip: events may carry a `source` tag so the service can ignore its own publishes.
+- Current binding: the consumer is intentionally bound only to `arts.flush`.
+- Effect: when an `arts.flush` event is received, all Arts cache pages are cleared (e.g., paginated entries).
+- Self-skip: events may carry a `source` tag so the service can ignore its own publishes.
 
 ## Environment & Conventions
 
-* Broker URL: provided via environment variable pointing to CloudAMQP.
-* Exchange name: topic exchange used for cache-flush events (e.g., `cache.flush`).
-* Routing keys: `arts.flush`, `links.flush`, `raids.flush` (listener currently bound to `arts.flush` only).
-* Delivery semantics: lightweight, non-critical notifications favoring eventual consistency; duplicate deliveries are acceptable because cache flushes are idempotent.
+- Broker URL: provided via environment variable pointing to CloudAMQP.
+- Exchange name: topic exchange used for cache-flush events (e.g., `cache.flush`).
+- Routing keys: `arts.flush`, `links.flush`, `raids.flush` (listener currently bound to `arts.flush` only).
+- Delivery semantics: lightweight, non-critical notifications favoring eventual consistency; duplicate deliveries are acceptable because cache flushes are idempotent.
 
 ## Operational Notes
 
-* Startup: publisher and consumer are initialized when the server boots.
-* Observability: use the CloudAMQP dashboard to check connections, message rates, and bindings.
-* Failure behavior: if the broker is unavailable, local caches are still cleared; remote caches update once connectivity returns (eventual consistency).
-* Security: keep broker credentials out of source control; prefer per-environment credentials and least-privilege vhosts.
-* Performance: messages are small; cache flush operations are fast and bounded.
+- Startup: publisher and consumer are initialized when the server boots.
+- Observability: use the CloudAMQP dashboard to check connections, message rates, and bindings.
+- Failure behavior: if the broker is unavailable, local caches are still cleared; remote caches update once connectivity returns (eventual consistency).
+- Security: keep broker credentials out of source control; prefer per-environment credentials and least-privilege vhosts.
+- Performance: messages are small; cache flush operations are fast and bounded.
 
 ## Quick Checklist
 
-* Configure CloudAMQP URL and the cache-flush topic exchange as environment variables.
-* Confirm that senders publish `arts.flush`, `links.flush`, and `raids.flush` after local mutations.
-* Confirm that the listener is currently bound only to `arts.flush` (by design).
-* If/when cross-API invalidation is needed for Links/Raids, add bindings for `links.flush` and `raids.flush` and connect them to their cache-clear routines.
+- Configure CloudAMQP URL and the cache-flush topic exchange as environment variables.
+- Confirm that senders publish `arts.flush`, `links.flush`, and `raids.flush` after local mutations.
+- Confirm that the listener is currently bound only to `arts.flush` (by design).
+- If/when cross-API invalidation is needed for Links/Raids, add bindings for `links.flush` and `raids.flush` and connect them to their cache-clear routines.
 
 ---
 
@@ -155,9 +156,9 @@ After successfully mutating data and clearing the local cache, these controllers
 
 This API ships with **Sentry** for runtime error tracking, **performance traces (APM)** and optional **CPU profiling**.
 
-* **Where it’s wired:** initialization + process handlers live in `src/observability/sentry.ts`, and are mounted in `src/server.ts` (initialized **before** routes and the error handler attached **after** the router). 
-* **What we capture:** Express errors (via `Sentry.setupExpressErrorHandler`), HTTP spans, unhandled rejections and uncaught exceptions. 
-* **Packages:** `@sentry/node` and `@sentry/profiling-node`. 
+- **Where it’s wired:** initialization + process handlers live in `src/observability/sentry.ts`, and are mounted in `src/server.ts` (initialized **before** routes and the error handler attached **after** the router).
+- **What we capture:** Express errors (via `Sentry.setupExpressErrorHandler`), HTTP spans, unhandled rejections and uncaught exceptions.
+- **Packages:** `@sentry/node` and `@sentry/profiling-node`.
 
 ### Configuration
 
@@ -170,15 +171,15 @@ SENTRY_TRACES_SAMPLE_RATE=0.1     # 0.1 (APM)
 SENTRY_PROFILES_SAMPLE_RATE=0.1   # 0.1 (CPU profiling)
 ```
 
-If `SENTRY_DSN` is blank, Sentry is **skipped** (boot logs a warning). Default sample rates fall back to `0` when not set. 
+If `SENTRY_DSN` is blank, Sentry is **skipped** (boot logs a warning). Default sample rates fall back to `0` when not set.
 
 ### How it works
 
-* **`setupSentry(app)`**: initializes Sentry **before** routes with HTTP + Express integrations, **tracing (APM)** and **CPU profiling** via `@sentry/profiling-node`.
-* **`wireProcessHandlers()`**: forwards `unhandledRejection` and `uncaughtException` to Sentry.
-* **`attachSentryErrorHandler(app)`**: installs Sentry’s Express error middleware **after** the router.
+- **`setupSentry(app)`**: initializes Sentry **before** routes with HTTP + Express integrations, **tracing (APM)** and **CPU profiling** via `@sentry/profiling-node`.
+- **`wireProcessHandlers()`**: forwards `unhandledRejection` and `uncaughtException` to Sentry.
+- **`attachSentryErrorHandler(app)`**: installs Sentry’s Express error middleware **after** the router.
 
-> Tip: start with low sample rates in production (e.g., `0.1`) and adjust as needed. 
+> Tip: start with low sample rates in production (e.g., `0.1`) and adjust as needed.
 
 ---
 
